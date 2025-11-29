@@ -32,7 +32,7 @@ This [YouTube Video](https://youtu.be/5vYz37AqSO4) explains how to do it.
 type: custom:mushroom-entity-card
 entity: switch.plug_6_local
 tap_action:
-  action: toggle
+   action: toggle
 icon: mdi:power-plug
 icon_color: green
 name: Smart Plug
@@ -121,7 +121,7 @@ card_mod:
 type: custom:mushroom-entity-card
 entity: switch.plug_6_local
 tap_action:
-  action: toggle
+   action: toggle
 icon: mdi:power-socket-au
 icon_color: green
 name: Charger
@@ -278,7 +278,7 @@ card_mod:
 type: custom:mushroom-entity-card
 entity: switch.plug_6_local
 tap_action:
-  action: toggle
+   action: toggle
 icon: mdi:fan
 icon_color: blue
 name: Fan
@@ -399,7 +399,7 @@ card_mod:
 type: custom:mushroom-entity-card
 entity: switch.plug_6_local
 tap_action:
-  action: toggle
+   action: toggle
 icon: mdi:fan
 icon_color: cyan
 name: Fan
@@ -743,7 +743,7 @@ card_mod:
 type: custom:mushroom-entity-card
 entity: switch.plug_6_local
 tap_action:
-  action: toggle
+   action: toggle
 icon: mdi:lock
 icon_color: red
 name: Lock
