@@ -17,9 +17,9 @@
 
 # Home Assistant Animated Battery / Percentage Cards
 
-This [YouTube Video](https://youtu.be/5vYz37AqSO4) explains how to do it.
+This [YouTube Video](https://youtu.be/SrFbC1ae35E) explains how to do it.
 
-![gif-16c233439b5ca922](https://github.com/user-attachments/assets/ef45ac40-d6ce-4ee6-a1ff-8c97887a2dc9)
+![gif-16c233439b5ca922](https://github.com/user-attachments/assets/ed91507c-2dc6-4c35-8825-0df2b2b72f69)
 
 <hr>
 
