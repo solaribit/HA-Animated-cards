@@ -31,13 +31,11 @@ explains how to do it.
 
 ## Batch 2:
 ![522590522-55a39df8-b28b-427b-8ec2-73221f6d154b](https://github.com/user-attachments/assets/65ba4a4e-bed4-4ee1-8735-03e2bfd67db6)
-`Loading image... please wait`
 
-### Note (about mushroom entity cards animations)
-- In `State Mode:` when the main card entity is active, both icon get colored and animation start playing.
-- In `Number Mode:` when the condition is met, the animations start playing, regardless of the state of the main card entity, so card icon will be still grayed out to indicate that the entity (like a plug) is still `Off`.
+## Batch 3:
+![gif-16c233439b5ca922-2](https://github.com/user-attachments/assets/8acdc17a-abc0-41dc-80c3-929c5b1fa2b6)
 
-### Cards:
+# Cards:
 
 <details>
   <summary><strong>1 - smartplug</summary>
@@ -9268,6 +9266,1542 @@ card_mod:
         display: flex; justify-content: center; align-items: center;
         margin: 20px 0 30px 0 !important;
         position: relative; z-index: 1; /* Keep icon above the card glow */
+      }
+
+```
+</details>
+
+<details>
+<summary><strong>56 - Pollen grass (kleenex)</strong></summary>
+
+```yaml
+type: custom:mushroom-entity-card
+entity: sensor.kleenex_pollen_radar_home_grass_level
+tap_action:
+  action: more-info
+name: Grass
+icon: mdi:grass
+primary_info: state
+secondary_info: name
+icon_color: light-grey
+card_mod:
+  style: |
+    ha-card {
+      /* ===== LOGIC & SETTINGS ===== */
+      {% set state = states(config.entity) %}
+      /* 1. Get the Grass Sensor Data */
+      {% set grass = states('sensor.kleenex_pollen_radar_home_grass') %}
+      
+      /* 2. Define Colors based on state */
+      {% if state in ['high', 'very-high', 'red'] %}
+        {% set c1 = '255, 65, 108' %}  /* Red RGB */
+        {% set c2 = '255, 75, 43' %}   /* Orange RGB */
+        {% set speed = '4s' %}
+      {% elif state in ['moderate', 'medium', 'orange'] %}
+        {% set c1 = '247, 151, 30' %}  /* Orange RGB */
+        {% set c2 = '255, 210, 0' %}   /* Yellow RGB */
+        {% set speed = '7s' %}
+      {% else %}
+        {% set c1 = '0, 242, 96' %}    /* Green RGB */
+        {% set c2 = '5, 117, 230' %}   /* Blue RGB */
+        {% set speed = '12s' %}
+      {% endif %}
+
+      /* 3. Pass variables to CSS */
+      --aura-color-1: rgba({{ c1 }}, 0.6);
+      --aura-color-2: rgba({{ c2 }}, 0.6);
+      --speed: {{ speed }};
+      
+      /* 4. Card Body Styling */
+      background: #101010 !important;
+      border-radius: 25px;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    ha-card::before {
+      content: "";
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      z-index: 0;
+      
+      /* Two radial gradients in one element */
+      background-image: 
+        radial-gradient(circle at 50% 50%, var(--aura-color-1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, var(--aura-color-2) 0%, transparent 50%);
+      
+      filter: blur(60px);
+      opacity: 0.8;
+      animation: rotate-aura var(--speed) linear infinite;
+    }
+
+    ha-card::after {
+      /* INJECT THE DATA HERE */
+      content: '{{ grass }}';
+      
+      position: absolute;
+      top: 50%; 
+      right: 16px;
+      transform: translateY(-50%);
+      z-index: 10;
+      
+      /* Badge Styling (Like the battery example) */
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-shadow: 0 1px 2px black;
+    }
+
+    /* --- GLASS SURFACE OVERLAY --- */
+    mushroom-shape-icon {
+       --icon-size: 68px;
+       --icon-color: rgba(var(--voc-rgb),1) !important;
+      display: flex;
+      margin: -18px 0 10px -15px !important;
+      padding-right: 22px;
+      padding-bottom: 10px;
+    }
+    ha-card {
+      clip-path: inset(0 0 0 0 round var(--ha-card-border-radius, 14px));
+
+      --card-primary-font-size: 1.2rem !important;
+      --card-primary-line-height: 1.3 !important;
+    }
+
+    /* Typography */
+    .mushroom-state-info span.primary {
+      color: white !important;
+      font-weight: 600 !important;
+      font-size: 16px !important;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .mushroom-state-info span.secondary {
+      color: rgba(255,255,255,0.8) !important;
+    }
+
+    /* Icon Styling */
+    mushroom-shape-icon {
+      --icon-size: 60px;
+      --icon-color: white !important;
+    }
+    ha-state-icon {
+      color: white !important;
+    }
+
+    /* Animation */
+    @keyframes rotate-aura {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+```
+</details>
+
+<details>
+<summary><strong>57 - Pollen trees (kleenex)</strong></summary>
+
+```yaml
+type: custom:mushroom-entity-card
+entity: sensor.kleenex_pollen_radar_home_trees_level
+tap_action:
+  action: more-info
+name: Trees
+icon: mdi:forest
+primary_info: state
+secondary_info: name
+icon_color: light-grey
+card_mod:
+  style: |
+    ha-card {
+      /* ===== LOGIC & SETTINGS ===== */
+      {% set state = states(config.entity) %}
+      /* 1. Get the Grass Sensor Data */
+      {% set grass = states('sensor.kleenex_pollen_radar_home_trees') %}
+      
+      /* 2. Define Colors based on state */
+      {% if state in ['high', 'very-high', 'red'] %}
+        {% set c1 = '255, 65, 108' %}  /* Red RGB */
+        {% set c2 = '255, 75, 43' %}   /* Orange RGB */
+        {% set speed = '4s' %}
+      {% elif state in ['moderate', 'medium', 'orange'] %}
+        {% set c1 = '247, 151, 30' %}  /* Orange RGB */
+        {% set c2 = '255, 210, 0' %}   /* Yellow RGB */
+        {% set speed = '7s' %}
+      {% else %}
+        {% set c1 = '0, 242, 96' %}    /* Green RGB */
+        {% set c2 = '5, 117, 230' %}   /* Blue RGB */
+        {% set speed = '12s' %}
+      {% endif %}
+
+      /* 3. Pass variables to CSS */
+      --aura-color-1: rgba({{ c1 }}, 0.6);
+      --aura-color-2: rgba({{ c2 }}, 0.6);
+      --speed: {{ speed }};
+      
+      /* 4. Card Body Styling */
+      background: #101010 !important;
+      border-radius: 25px;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    ha-card::before {
+      content: "";
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      z-index: 0;
+      
+      /* Two radial gradients in one element */
+      background-image: 
+        radial-gradient(circle at 50% 50%, var(--aura-color-1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, var(--aura-color-2) 0%, transparent 50%);
+      
+      filter: blur(60px);
+      opacity: 0.8;
+      animation: rotate-aura var(--speed) linear infinite;
+    }
+
+    ha-card::after {
+      /* INJECT THE DATA HERE */
+      content: '{{ grass }}';
+      
+      position: absolute;
+      top: 50%; 
+      right: 16px;
+      transform: translateY(-50%);
+      z-index: 10;
+      
+      /* Badge Styling (Like the battery example) */
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-shadow: 0 1px 2px black;
+    }
+
+    /* --- GLASS SURFACE OVERLAY --- */
+    mushroom-shape-icon {
+       --icon-size: 68px;
+       --icon-color: rgba(var(--voc-rgb),1) !important;
+      display: flex;
+      margin: -18px 0 10px -15px !important;
+      padding-right: 22px;
+      padding-bottom: 10px;
+    }
+    ha-card {
+      clip-path: inset(0 0 0 0 round var(--ha-card-border-radius, 14px));
+
+      --card-primary-font-size: 1.2rem !important;
+      --card-primary-line-height: 1.3 !important;
+    }
+
+    /* Typography */
+    .mushroom-state-info span.primary {
+      color: white !important;
+      font-weight: 600 !important;
+      font-size: 16px !important;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .mushroom-state-info span.secondary {
+      color: rgba(255,255,255,0.8) !important;
+    }
+
+    /* Icon Styling */
+    mushroom-shape-icon {
+      --icon-size: 60px;
+      --icon-color: white !important;
+    }
+    ha-state-icon {
+      color: white !important;
+    }
+
+    /* Animation */
+    @keyframes rotate-aura {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+```
+</details>
+
+<details>
+<summary><strong>58 - Pollen weeds (kleenex)</strong></summary>
+
+```yaml
+type: custom:mushroom-entity-card
+entity: sensor.kleenex_pollen_radar_home_weeds_level
+tap_action:
+  action: more-info
+name: Weeds
+icon: mdi:cannabis
+primary_info: state
+secondary_info: name
+icon_color: light-grey
+card_mod:
+  style: |
+    ha-card {
+      /* ===== LOGIC & SETTINGS ===== */
+      {% set state = states(config.entity) %}
+      /* 1. Get the Grass Sensor Data */
+      {% set grass = states('sensor.kleenex_pollen_radar_home_weeds') %}
+      
+      /* 2. Define Colors based on state */
+      {% if state in ['high', 'very-high', 'red'] %}
+        {% set c1 = '255, 65, 108' %}  /* Red RGB */
+        {% set c2 = '255, 75, 43' %}   /* Orange RGB */
+        {% set speed = '4s' %}
+      {% elif state in ['moderate', 'medium', 'orange'] %}
+        {% set c1 = '247, 151, 30' %}  /* Orange RGB */
+        {% set c2 = '255, 210, 0' %}   /* Yellow RGB */
+        {% set speed = '7s' %}
+      {% else %}
+        {% set c1 = '0, 242, 96' %}    /* Green RGB */
+        {% set c2 = '5, 117, 230' %}   /* Blue RGB */
+        {% set speed = '12s' %}
+      {% endif %}
+
+      /* 3. Pass variables to CSS */
+      --aura-color-1: rgba({{ c1 }}, 0.6);
+      --aura-color-2: rgba({{ c2 }}, 0.6);
+      --speed: {{ speed }};
+      
+      /* 4. Card Body Styling */
+      background: #101010 !important;
+      border-radius: 25px;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    ha-card::before {
+      content: "";
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      z-index: 0;
+      
+      /* Two radial gradients in one element */
+      background-image: 
+        radial-gradient(circle at 50% 50%, var(--aura-color-1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, var(--aura-color-2) 0%, transparent 50%);
+      
+      filter: blur(60px);
+      opacity: 0.8;
+      animation: rotate-aura var(--speed) linear infinite;
+    }
+
+    ha-card::after {
+      /* INJECT THE DATA HERE */
+      content: '{{ grass }}';
+      
+      position: absolute;
+      top: 50%; 
+      right: 16px;
+      transform: translateY(-50%);
+      z-index: 10;
+      
+      /* Badge Styling (Like the battery example) */
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-shadow: 0 1px 2px black;
+    }
+
+    /* --- GLASS SURFACE OVERLAY --- */
+    mushroom-shape-icon {
+       --icon-size: 68px;
+       --icon-color: rgba(var(--voc-rgb),1) !important;
+      display: flex;
+      margin: -18px 0 10px -15px !important;
+      padding-right: 22px;
+      padding-bottom: 10px;
+    }
+    ha-card {
+      clip-path: inset(0 0 0 0 round var(--ha-card-border-radius, 14px));
+
+      --card-primary-font-size: 1.2rem !important;
+      --card-primary-line-height: 1.3 !important;
+    }
+
+    /* Typography */
+    .mushroom-state-info span.primary {
+      color: white !important;
+      font-weight: 600 !important;
+      font-size: 16px !important;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    .mushroom-state-info span.secondary {
+      color: rgba(255,255,255,0.8) !important;
+    }
+
+    /* Icon Styling */
+    mushroom-shape-icon {
+      --icon-size: 60px;
+      --icon-color: white !important;
+    }
+    ha-state-icon {
+      color: white !important;
+    }
+
+    /* Animation */
+    @keyframes rotate-aura {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+```
+</details>
+
+<details>
+<summary><strong>59 - water leak</strong></summary>
+
+```yaml
+type: custom:mushroom-entity-card
+entity: binary_sensor.flood_kitchen_water_leak
+tap_action:
+  action: more-info
+name: Leak sensor
+icon: mdi:pipe-leak
+primary_info: name
+secondary_info: none
+icon_color: white
+card_mod:
+  style: |
+    ha-card {
+      /* ===== LOGIC & SETTINGS ===== */
+      {% set level = 70 %}
+      {% set rgb = '29, 130, 150' %}
+      {% set sensor_on = is_state(config.entity, 'on') %}
+
+      /* ===== VARIABLE ==== */
+      --liq-color: rgb({{ rgb }});
+      --liq-level: {{ level }}%;
+      --wave-speed: 1.5s;
+
+      /* ===== FONT SETTINGS ==== */
+      --card-primary-font-size: 16px !important;
+      --card-secondary-font-size: 12px !important;
+      --card-primary-font-weight: bold !important;
+
+      background-color: #1c1c1c !important;
+
+      {% if sensor_on %}
+      background-image:
+        linear-gradient(
+          90deg,
+          rgba({{ rgb }}, 1) 0%,
+          rgba({{ rgb }}, 1) {{ level -10 }}%,
+          transparent {{ level }}%,
+          transparent 100%
+        ) !important;
+      {% else %}
+      background-image: none !important;
+      {% endif %}
+
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      z-index: 0;
+      transition: all 0.5s ease;
+    }
+
+    /* ===== WET/DRY BADGE  ===== */
+    ha-card::before {
+      {% set label = 'Wet' if sensor_on else 'Dry' %}
+      content: '{{ label }}';
+      position: absolute;
+      top: 30%;
+      right: 10px;
+
+      font-size: 1.1rem;
+      font-weight: 700;
+
+      color: {{ 'rgb(50,151,200)' if sensor_on else 'white' }};
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 6px;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* ===== LAYER: THE SPINNING WAVE ===== */
+    ha-card::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+
+      /* Show wave only when sensor is ON and level is between 0 and 100 */
+      display: {{
+        'block'
+        if sensor_on and level > 0 and level < 100
+        else 'none'
+      }};
+
+      width: 120px;
+      height: 120px;
+
+      background: var(--liq-color);
+      box-shadow: 0 0 25px rgba({{ rgb }}, 0.5);
+      border-radius: 40%;
+
+      left: calc(var(--liq-level) - 120px);
+      top: calc(50% - 60px);
+
+      animation: spin-wave var(--wave-speed) linear infinite;
+      transition: left 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    /* ===== ENSURE CONTENT IS ON TOP ===== */
+    .mushroom-state-item {
+      z-index: 2;
+      position: relative;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+
+    /* ===== ICON + SHAPE STATE COLORS ===== */
+    mushroom-shape-icon {
+      --icon-size: 68px;
+      display: flex;
+      margin: -18px 0 10px -18px !important;
+      padding-right: 15px;
+      z-index: 2;
+
+      /* Shape blue tinted when OFF */
+      {% if not sensor_on %}
+        --shape-color: rgba({{ rgb }}, 0.25);
+      {% endif %}
+    }
+
+    /* Icon color changes with state */
+    ha-state-icon {
+      color: {{
+        'white'
+        if sensor_on
+        else 'rgb(50,151,200)'
+      }} !important;
+
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+
+    /* ===== NIMATION ===== */
+    @keyframes spin-wave {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+```
+</details>
+
+<details>
+<summary><strong>60 - water leak</strong></summary>
+
+```yaml
+type: custom:mushroom-entity-card
+entity: binary_sensor.flood_kitchen_water_leak
+tap_action:
+  action: more-info
+name: Leak sensor
+icon: mdi:pipe-leak
+icon_color: white
+primary_info: name
+secondary_info: none
+card_mod:
+  style:
+    mushroom-shape-icon$: |
+      .shape {
+        /* --- LOGIC INJECTION --- */
+        --liquid-level: var(--custom-level);
+        --liquid-color: var(--custom-color);
+
+        /* Container Setup */
+        background: rgba(255, 255, 255, 0.05) !important;
+        overflow: hidden !important;
+        position: relative;
+        box-shadow: var(--custom-icon-shadow) !important;
+      }
+
+      /* THE LIQUID (Wavy Fill) */
+      .shape::before {
+        content: '';
+        position: absolute;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+
+        /* 50% fill when ON, 0% when OFF */
+        top: calc(100% - var(--liquid-level));
+
+        background: var(--liquid-color);
+        border-radius: 40%;
+
+        /* Animate only when ON */
+        animation: var(--custom-wave-anim);
+        opacity: 0.85;
+      }
+
+      /* Ensure the MDI Icon sits on top of the liquid */
+      ha-icon {
+        position: relative;
+        z-index: 2;
+        mix-blend-mode: overlay;
+        color: white !important;
+      }
+
+      /* --- ANIMATION --- */
+      @keyframes liquid-wave {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    .: |
+      ha-card {
+        /* ================= USER SETTINGS ================= */
+        {% set rgb = '29, 130, 150' %}
+
+        /* Font sizes you can change */
+        {% set primary_font_size = 16 %}
+        {% set secondary_font_size = 12 %}
+        /* ================================================= */
+
+        /* Apply Mushroom font vars */
+        --card-primary-font-size: {{ primary_font_size }}px !important;
+        --card-secondary-font-size: {{ secondary_font_size }}px !important;
+        --card-primary-font-weight: 700 !important;
+
+        /* --- LOGIC --- */
+        {% set sensor_on = is_state(config.entity, 'on') %}
+        {% set level = 50 if sensor_on else 0 %}
+
+        /* --- PASS VARIABLES TO CSS --- */
+        --custom-level: {{ level }}%;
+        --custom-color: rgba({{ rgb }}, {{ 0.8 if sensor_on else 0 }});
+        --custom-icon-shadow: {{ '0 0 12px rgba(' ~ rgb ~ ', 0.45)' if sensor_on else 'none' }};
+        --custom-wave-anim: {{ 'liquid-wave 6s linear infinite' if sensor_on else 'none' }};
+
+        /* --- CARD STYLING --- */
+        background: #1c1c1c !important;
+        border: none !important;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s ease;
+
+        /* Subtle ambient glow only when ON */
+        {% if sensor_on %}
+        background-image:
+          radial-gradient(circle at 24px 24px, rgba({{ rgb }}, 0.15) 0%, transparent 60%) !important;
+        {% else %}
+        background-image: none !important;
+        {% endif %}
+      }
+
+      /* Optional: if you ever enable primary_info later,
+         this ensures the text respects the vars robustly */
+      .primary {
+        font-size: var(--card-primary-font-size) !important;
+        font-weight: var(--card-primary-font-weight) !important;
+      }
+      .secondary {
+        font-size: var(--card-secondary-font-size) !important;
+      }
+
+      /* --- WET/DRY BADGE (Right side) --- */
+      ha-card::before {
+        content: '{{ "Wet" if sensor_on else "Dry" }}';
+        position: absolute;
+        top: 30%;
+        right: 10px;
+        font-size: 1.1rem;
+        font-weight: 700;
+
+        color: {{ 'rgb(50,151,200)' if sensor_on else 'white' }};
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 2px 8px;
+        border-radius: 6px;
+        pointer-events: none;
+      }
+      /* Icon color changes with state */
+      ha-state-icon {
+        color: {{
+          'white'
+          if sensor_on
+          else 'rgb(50,151,200)'
+        }} !important;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      }
+
+      mushroom-shape-icon {
+        --icon-size: 60px;
+        display: flex;
+        padding-right: 15px;
+      }
+
+```
+</details>
+
+<details>
+<summary><strong>61 - CO2 PPM</strong></summary>
+
+```yaml
+type: custom:mushroom-entity-card
+entity: sensor.livingroom_co2_ppm
+tap_action:
+  action: more-info
+icon: mdi:molecule-co2
+name: Living room CO2 (ppm)
+primary_info: state
+secondary_info: name
+card_mod:
+  style:
+    mushroom-shape-icon$: |
+      .shape {
+        {# ========== CONFIG ========== #}
+        {% set co2 = states('sensor.livingroom_co2_ppm') | float(0) %}
+
+        {# ------------------------------------------- #}
+        {# CO2 → COLOR + EFFECT PRESETS                #}
+        {# ------------------------------------------- #}
+
+        {# DEFAULTS (will be overridden by ranges) #}
+        {% set rgb = '40,200,120' %}
+        {% set anim = 'co2-fresh-breathe' %}
+        {% set glow_anim = 'co2-fresh-glow' %}
+        {% set halo_anim = 'co2-fresh-halo' %}
+        {% set duration = 4.0 %}
+        {% set intensity = 0.5 %}
+
+        {# RANGES / COLORS #}
+        {# You can change numbers below if needed #}
+
+        {% if co2 < 600 %}
+          {# FRESH GREEN #}
+          {% set rgb = '40,200,120' %}
+          {% set anim = 'co2-fresh-breathe' %}
+          {% set glow_anim = 'co2-fresh-glow' %}
+          {% set halo_anim = 'co2-fresh-halo' %}
+          {% set duration = 4.4 %}
+          {% set intensity = 0.45 %}
+
+        {% elif co2 < 800 %}
+          {# SOFT GREEN #}
+          {% set rgb = '120,220,120' %}
+          {% set anim = 'co2-good-wave' %}
+          {% set glow_anim = 'co2-good-glow' %}
+          {% set halo_anim = 'co2-good-halo' %}
+          {% set duration = 3.6 %}
+          {% set intensity = 0.55 %}
+
+        {% elif co2 < 1000 %}
+          {# YELLOW #}
+          {% set rgb = '255,210,40' %}
+          {% set anim = 'co2-ok-breathe' %}
+          {% set glow_anim = 'co2-ok-glow' %}
+          {% set halo_anim = 'co2-ok-halo' %}
+          {% set duration = 3.0 %}
+          {% set intensity = 0.65 %}
+
+        {% elif co2 < 1400 %}
+          {# ORANGE #}
+          {% set rgb = '255,140,40' %}
+          {% set anim = 'co2-high-pulse' %}
+          {% set glow_anim = 'co2-high-glow' %}
+          {% set halo_anim = 'co2-high-halo' %}
+          {% set duration = 2.4 %}
+          {% set intensity = 0.85 %}
+
+        {% else %}
+          {# RED #}
+          {% set rgb = '255,50,50' %}
+          {% set anim = 'co2-bad-shimmer' %}
+          {% set glow_anim = 'co2-bad-glow' %}
+          {% set halo_anim = 'co2-bad-halo' %}
+          {% set duration = 2.0 %}
+          {% set intensity = 1.0 %}
+        {% endif %}
+
+        {# Apply variables #}
+        --co2-rgb: {{ rgb }};
+        --co2-intensity: {{ intensity }};
+        --shape-animation: {{ anim }} {{ duration }}s ease-in-out infinite;
+        --co2-glow-animation: {{ glow_anim }} {{ (duration * 0.9) | round(2) }}s ease-in-out infinite;
+        --co2-halo-animation: {{ halo_anim }} {{ (duration * 1.15) | round(2) }}s ease-in-out infinite;
+
+        opacity: 1;
+
+        /* Icon color follows CO2 level */
+        --icon-color: rgba({{ rgb }}, 1);
+
+        /* Shape neutral base */
+        background-color: rgba(77, 77, 77,0.1) !important;
+        box-shadow: none !important;
+        border: 1px solid rgba(255,255,255,0.06);
+
+        position: relative;
+        transform-origin: 50% 60%;
+        animation: var(--shape-animation);
+      }
+
+      /* Glow layers */
+      .shape::before,
+      .shape::after {
+        content: '';
+        position: absolute;
+        border-radius: inherit;
+        pointer-events: none;
+      }
+
+      .shape::before {
+        inset: -8px;
+        animation: var(--co2-glow-animation);
+      }
+
+      .shape::after {
+        inset: -22px;
+        animation: var(--co2-halo-animation);
+        mix-blend-mode: screen;
+      }
+
+      /* ========== FRESH ========== */
+      @keyframes co2-fresh-breathe {
+        0%   { transform: scale(0.96); }
+        50%  { transform: scale(1.03); }
+        100% { transform: scale(0.96); }
+      }
+
+      @keyframes co2-fresh-glow {
+        0% {
+          box-shadow:
+            0 0 20px 0 rgba(var(--co2-rgb), 0.55),
+            0 0 34px 6 rgba(var(--co2-rgb), 0.5);
+        }
+        50% {
+          box-shadow:
+            0 0 30px 4 rgba(var(--co2-rgb), 0.9),
+            0 0 50px 10px rgba(var(--co2-rgb), 0.85);
+        }
+        100% {
+          box-shadow:
+            0 0 20px 0 rgba(var(--co2-rgb), 0.55),
+            0 0 34px 6 rgba(var(--co2-rgb), 0.5);
+        }
+      }
+
+      @keyframes co2-fresh-halo {
+        0% {
+          box-shadow:
+            0 0 80px 20px rgba(var(--co2-rgb), 0.28),
+            0 -20px 80px -14px rgba(200, 255, 230, 0.45);
+        }
+        50% {
+          box-shadow:
+            0 0 130px 36px rgba(var(--co2-rgb), 0.42),
+            0 -34px 100px -8px rgba(220, 255, 240, 0.65);
+        }
+        100% {
+          box-shadow:
+            0 0 80px 20px rgba(var(--co2-rgb), 0.28),
+            0 -20px 80px -14px rgba(200, 255, 230, 0.45);
+        }
+      }
+
+      /* ========== GOOD ========== */
+      @keyframes co2-good-wave {
+        0%   { transform: translateX(0); }
+        25%  { transform: translateX(-1px); }
+        50%  { transform: translateX(1px) translateY(-1px); }
+        75%  { transform: translateX(-1px); }
+        100% { transform: translateX(0); }
+      }
+
+      @keyframes co2-good-glow {
+        0% {
+          box-shadow:
+            0 0 22px 0 rgba(var(--co2-rgb), 0.55),
+            0 0 34px 4 rgba(var(--co2-rgb), 0.6);
+        }
+        50% {
+          box-shadow:
+            0 0 28px 2 rgba(var(--co2-rgb), 0.9),
+            0 0 48px 12px rgba(var(--co2-rgb), 0.8);
+        }
+        100% {
+          box-shadow:
+            0 0 22px 0 rgba(var(--co2-rgb), 0.55),
+            0 0 34px 4 rgba(var(--co2-rgb), 0.6);
+        }
+      }
+
+      @keyframes co2-good-halo {
+        0% {
+          box-shadow:
+            0 0 90px 26px rgba(var(--co2-rgb), 0.3),
+            0 18px 80px -12px rgba(120, 255, 160, 0.3);
+        }
+        50% {
+          box-shadow:
+            0 0 140px 42px rgba(var(--co2-rgb), 0.4),
+            0 30px 110px -10px rgba(140, 255, 180, 0.45);
+        }
+        100% {
+          box-shadow:
+            0 0 90px 26px rgba(var(--co2-rgb), 0.3),
+            0 18px 80px -12px rgba(120, 255, 160, 0.3);
+        }
+      }
+
+      /* ========== OK ========== */
+      @keyframes co2-ok-breathe {
+        0%   { transform: scale(0.98); }
+        50%  { transform: scale(1.05); }
+        100% { transform: scale(0.98); }
+      }
+
+      @keyframes co2-ok-glow {
+        50% {
+          box-shadow:
+            0 0 26px 4 rgba(var(--co2-rgb), 0.85),
+            0 0 42px 10px rgba(var(--co2-rgb), 0.8);
+        }
+      }
+
+      @keyframes co2-ok-halo {
+        50% {
+          box-shadow:
+            0 0 120px 40px rgba(var(--co2-rgb), 0.42),
+            0 26px 80px -10px rgba(255, 245, 180, 0.5);
+        }
+      }
+
+      /* ========== HIGH ========== */
+      @keyframes co2-high-pulse {
+        0%   { transform: scale(1); }
+        50%  { transform: scale(1.07); }
+        100% { transform: scale(1); }
+      }
+
+      @keyframes co2-high-glow {
+        50% {
+          box-shadow:
+            0 0 30px 4 rgba(var(--co2-rgb), 0.95),
+            0 0 54px 14px rgba(var(--co2-rgb), 0.9);
+        }
+      }
+
+      @keyframes co2-high-halo {
+        50% {
+          box-shadow:
+            0 0 140px 48px rgba(var(--co2-rgb), 0.52),
+            0 26px 100px -10px rgba(255, 210, 150, 0.5);
+        }
+      }
+
+      /* ========== BAD ========== */
+      @keyframes co2-bad-shimmer {
+        0%   { transform: scale(1); filter: blur(0); }
+        50%  { transform: scale(1.08); filter: blur(0.6px); }
+        100% { transform: scale(1); filter: blur(0); }
+      }
+
+      @keyframes co2-bad-glow {
+        50% {
+          box-shadow:
+            0 0 34px 6 rgba(var(--co2-rgb), 1),
+            0 0 62px 14px rgba(var(--co2-rgb), 0.95);
+        }
+      }
+
+      @keyframes co2-bad-halo {
+        50% {
+          box-shadow:
+            0 0 160px 60px rgba(var(--co2-rgb), 0.6),
+            0 34px 120px -12px rgba(255, 140, 120, 0.6);
+        }
+      }
+    .: |
+      mushroom-shape-icon {
+        --icon-size: 64px;
+        --icon-color: rgba(var(--co2-rgb),1) !important;
+        display: flex;
+        margin: -18px 0 10px -20px !important;
+        padding-right: 22px;
+        padding-bottom: 10px;
+      }
+      ha-card {
+        clip-path: inset(0 0 0 0 round var(--ha-card-border-radius, 14px));
+
+        /* FONT SIZE & SPACING SETTINGS */
+        --card-primary-font-size: 1.5rem !important;
+
+        /* Increases vertical space between primary and secondary */
+        --card-primary-line-height: 1.3 !important;
+      }
+
+```
+</details>
+
+<details>
+<summary><strong>62 - Air Quality VOC</strong></summary>
+
+```yaml
+type: custom:mushroom-entity-card
+entity: sensor.livingroom_air_quality_voc
+tap_action:
+  action: more-info
+icon: mdi:air-filter
+name: Living room VOC
+primary_info: state
+secondary_info: name
+card_mod:
+  style:
+    mushroom-shape-icon$: |
+      .shape {
+        {# ========== CONFIG ========== #}
+        {% set voc = states('sensor.livingroom_air_quality_voc') | float(0) %}
+
+        {# DEFAULTS (will be overridden by ranges) #}
+        {% set rgb = '40,200,120' %}
+        {% set anim = 'voc-clean-breathe' %}
+        {% set glow_anim = 'voc-clean-glow' %}
+        {% set halo_anim = 'voc-clean-halo' %}
+        {% set duration = 4.0 %}
+        {% set intensity = 0.5 %}
+
+        {# RANGES / COLORS #}
+        {# You can change numbers below if needed #}
+
+        {% if voc < 100 %}
+          {# GREEN #}
+          {% set rgb = '40,200,120' %}
+          {% set anim = 'voc-clean-breathe' %}
+          {% set glow_anim = 'voc-clean-glow' %}
+          {% set halo_anim = 'voc-clean-halo' %}
+          {% set duration = 4.4 %}
+          {% set intensity = 0.45 %}
+
+        {% elif voc < 200 %}
+          {# YELLOW-GREEN #}
+          {% set rgb = '140,220,80' %}
+          {% set anim = 'voc-good-wave' %}
+          {% set glow_anim = 'voc-good-glow' %}
+          {% set halo_anim = 'voc-good-halo' %}
+          {% set duration = 3.6 %}
+          {% set intensity = 0.55 %}
+
+        {% elif voc < 300 %}
+          {# YELLOW #}
+          {% set rgb = '255,210,40' %}
+          {% set anim = 'voc-fair-breathe' %}
+          {% set glow_anim = 'voc-fair-glow' %}
+          {% set halo_anim = 'voc-fair-halo' %}
+          {% set duration = 3.0 %}
+          {% set intensity = 0.7 %}
+
+        {% elif voc < 400 %}
+          {# ORANGE #}
+          {% set rgb = '255,140,40' %}
+          {% set anim = 'voc-poor-pulse' %}
+          {% set glow_anim = 'voc-poor-glow' %}
+          {% set halo_anim = 'voc-poor-halo' %}
+          {% set duration = 2.4 %}
+          {% set intensity = 0.9 %}
+
+        {% else %}
+          {# RED #}
+          {% set rgb = '255,50,50' %}
+          {% set anim = 'voc-bad-shimmer' %}
+          {% set glow_anim = 'voc-bad-glow' %}
+          {% set halo_anim = 'voc-bad-halo' %}
+          {% set duration = 2.0 %}
+          {% set intensity = 1.0 %}
+        {% endif %}
+
+        {# Apply variables #}
+        --voc-rgb: {{ rgb }};
+        --voc-intensity: {{ intensity }};
+        --shape-animation: {{ anim }} {{ duration }}s ease-in-out infinite;
+        --voc-glow-animation: {{ glow_anim }} {{ (duration * 0.9) | round(2) }}s ease-in-out infinite;
+        --voc-halo-animation: {{ halo_anim }} {{ (duration * 1.15) | round(2) }}s ease-in-out infinite;
+
+        opacity: 1;
+
+        /* Icon color follows VOC level */
+        --icon-color: rgba({{ rgb }}, 1);
+
+        /* Shape neutral base */
+        background-color: rgba(77, 77, 77,0.1) !important;
+        box-shadow: none !important;
+        border: 1px solid rgba(255,255,255,0.06);
+
+        position: relative;
+        transform-origin: 50% 60%;
+        animation: var(--shape-animation);
+      }
+
+      /* Glow layers */
+      .shape::before,
+      .shape::after {
+        content: '';
+        position: absolute;
+        border-radius: inherit;
+        pointer-events: none;
+      }
+
+      .shape::before {
+        inset: -8px;
+        animation: var(--voc-glow-animation);
+      }
+
+      .shape::after {
+        inset: -22px;
+        animation: var(--voc-halo-animation);
+        mix-blend-mode: screen;
+      }
+
+      /* ========== CLEAN ========== */
+      @keyframes voc-clean-breathe {
+        0%   { transform: scale(0.96); }
+        50%  { transform: scale(1.03); }
+        100% { transform: scale(0.96); }
+      }
+
+      @keyframes voc-clean-glow {
+        0% {
+          box-shadow:
+            0 0 20px 0 rgba(var(--voc-rgb), 0.55),
+            0 0 34px 6 rgba(var(--voc-rgb), 0.5);
+        }
+        50% {
+          box-shadow:
+            0 0 30px 4 rgba(var(--voc-rgb), 0.9),
+            0 0 50px 10px rgba(var(--voc-rgb), 0.85);
+        }
+        100% {
+          box-shadow:
+            0 0 20px 0 rgba(var(--voc-rgb), 0.55),
+            0 0 34px 6 rgba(var(--voc-rgb), 0.5);
+        }
+      }
+
+      @keyframes voc-clean-halo {
+        0% {
+          box-shadow:
+            0 0 80px 20px rgba(var(--voc-rgb), 0.28),
+            0 -20px 80px -14px rgba(200, 255, 230, 0.45);
+        }
+        50% {
+          box-shadow:
+            0 0 130px 36px rgba(var(--voc-rgb), 0.42),
+            0 -34px 100px -8px rgba(220, 255, 240, 0.65);
+        }
+        100% {
+          box-shadow:
+            0 0 80px 20px rgba(var(--voc-rgb), 0.28),
+            0 -20px 80px -14px rgba(200, 255, 230, 0.45);
+        }
+      }
+
+      /* ========== GOOD ========== */
+      @keyframes voc-good-wave {
+        0%   { transform: translateX(0); }
+        25%  { transform: translateX(-1px); }
+        50%  { transform: translateX(1px) translateY(-1px); }
+        75%  { transform: translateX(-1px); }
+        100% { transform: translateX(0); }
+      }
+
+      @keyframes voc-good-glow {
+        0% {
+          box-shadow:
+            0 0 22px 0 rgba(var(--voc-rgb), 0.55),
+            0 0 34px 4 rgba(var(--voc-rgb), 0.6);
+        }
+        50% {
+          box-shadow:
+            0 0 28px 2 rgba(var(--voc-rgb), 0.9),
+            0 0 48px 12px rgba(var(--voc-rgb), 0.8);
+        }
+        100% {
+          box-shadow:
+            0 0 22px 0 rgba(var(--voc-rgb), 0.55),
+            0 0 34px 4 rgba(var(--voc-rgb), 0.6);
+        }
+      }
+
+      @keyframes voc-good-halo {
+        0% {
+          box-shadow:
+            0 0 90px 26px rgba(var(--voc-rgb), 0.3),
+            0 18px 80px -12px rgba(140, 255, 120, 0.25);
+        }
+        50% {
+          box-shadow:
+            0 0 140px 42px rgba(var(--voc-rgb), 0.4),
+            0 30px 110px -10px rgba(160, 255, 140, 0.4);
+        }
+        100% {
+          box-shadow:
+            0 0 90px 26px rgba(var(--voc-rgb), 0.3),
+            0 18px 80px -12px rgba(140, 255, 120, 0.25);
+        }
+      }
+
+      /* ========== FAIR ========== */
+      @keyframes voc-fair-breathe {
+        0%   { transform: scale(0.98); }
+        50%  { transform: scale(1.05); }
+        100% { transform: scale(0.98); }
+      }
+
+      @keyframes voc-fair-glow {
+        50% {
+          box-shadow:
+            0 0 26px 4 rgba(var(--voc-rgb), 0.85),
+            0 0 42px 10px rgba(var(--voc-rgb), 0.8);
+        }
+      }
+
+      @keyframes voc-fair-halo {
+        50% {
+          box-shadow:
+            0 0 120px 40px rgba(var(--voc-rgb), 0.42),
+            0 26px 80px -10px rgba(255, 245, 180, 0.5);
+        }
+      }
+
+      /* ========== POOR ========== */
+      @keyframes voc-poor-pulse {
+        0%   { transform: scale(1); }
+        50%  { transform: scale(1.07); }
+        100% { transform: scale(1); }
+      }
+
+      @keyframes voc-poor-glow {
+        50% {
+          box-shadow:
+            0 0 30px 4 rgba(var(--voc-rgb), 0.95),
+            0 0 54px 14px rgba(var(--voc-rgb), 0.9);
+        }
+      }
+
+      @keyframes voc-poor-halo {
+        50% {
+          box-shadow:
+            0 0 140px 48px rgba(var(--voc-rgb), 0.52),
+            0 26px 100px -10px rgba(255, 210, 150, 0.5);
+        }
+      }
+
+      /* ========== BAD ========== */
+      @keyframes voc-bad-shimmer {
+        0%   { transform: scale(1); filter: blur(0); }
+        50%  { transform: scale(1.08); filter: blur(0.6px); }
+        100% { transform: scale(1); filter: blur(0); }
+      }
+
+      @keyframes voc-bad-glow {
+        50% {
+          box-shadow:
+            0 0 34px 6 rgba(var(--voc-rgb), 1),
+            0 0 62px 14px rgba(var(--voc-rgb), 0.95);
+        }
+      }
+
+      @keyframes voc-bad-halo {
+        50% {
+          box-shadow:
+            0 0 160px 60px rgba(var(--voc-rgb), 0.6),
+            0 34px 120px -12px rgba(255, 140, 120, 0.6);
+        }
+      }
+    .: |
+      mushroom-shape-icon {
+        --icon-size: 64px;
+        --icon-color: rgba(var(--voc-rgb),1) !important;
+        display: flex;
+        margin: -18px 0 10px -20px !important;
+        padding-right: 22px;
+        padding-bottom: 10px;
+      }
+      ha-card {
+        clip-path: inset(0 0 0 0 round var(--ha-card-border-radius, 14px));
+
+        --card-primary-font-size: 1.5rem !important;
+        --card-primary-line-height: 1.3 !important;
+      }
+
+```
+</details>
+
+<details>
+<summary><strong>63 - Pressure mbar</strong></summary>
+
+```yaml
+type: custom:mushroom-entity-card
+entity: sensor.livingroom_pressure_mbar
+tap_action:
+  action: more-info
+icon: mdi:gauge
+name: Living room pressure (mbar)
+primary_info: state
+secondary_info: name
+card_mod:
+  style:
+    mushroom-shape-icon$: |
+      .shape {
+        {# ========== CONFIG ========== #}
+        {% set p = states('sensor.livingroom_pressure_mbar') | float(0) %}
+
+        {# DEFAULTS #}
+        {% set rgb = '120,220,120' %}
+        {% set anim = 'pres-normal-breathe' %}
+        {% set glow_anim = 'pres-normal-glow' %}
+        {% set halo_anim = 'pres-normal-halo' %}
+        {% set duration = 3.6 %}
+        {% set intensity = 0.55 %}
+
+        {# RANGES / COLORS #}
+        {# You can change numbers below if needed #}
+
+        {% if p < 990 %}
+          {% set rgb = '0,140,255' %}
+          {% set anim = 'pres-low-breathe' %}
+          {% set glow_anim = 'pres-low-glow' %}
+          {% set halo_anim = 'pres-low-halo' %}
+          {% set duration = 4.4 %}
+          {% set intensity = 0.45 %}
+
+        {% elif p < 1005 %}
+          {% set rgb = '60,190,200' %}
+          {% set anim = 'pres-soft-wave' %}
+          {% set glow_anim = 'pres-soft-glow' %}
+          {% set halo_anim = 'pres-soft-halo' %}
+          {% set duration = 3.6 %}
+          {% set intensity = 0.55 %}
+
+        {% elif p < 1020 %}
+          {% set rgb = '120,220,120' %}
+          {% set anim = 'pres-normal-breathe' %}
+          {% set glow_anim = 'pres-normal-glow' %}
+          {% set halo_anim = 'pres-normal-halo' %}
+          {% set duration = 3.0 %}
+          {% set intensity = 0.6 %}
+
+        {% elif p < 1035 %}
+          {% set rgb = '255,200,60' %}
+          {% set anim = 'pres-high-pulse' %}
+          {% set glow_anim = 'pres-high-glow' %}
+          {% set halo_anim = 'pres-high-halo' %}
+          {% set duration = 2.6 %}
+          {% set intensity = 0.8 %}
+
+        {% else %}
+          {% set rgb = '255,80,60' %}
+          {% set anim = 'pres-veryhigh-shimmer' %}
+          {% set glow_anim = 'pres-veryhigh-glow' %}
+          {% set halo_anim = 'pres-veryhigh-halo' %}
+          {% set duration = 2.1 %}
+          {% set intensity = 1.0 %}
+        {% endif %}
+
+        --pres-rgb: {{ rgb }};
+        --pres-intensity: {{ intensity }};
+        --shape-animation: {{ anim }} {{ duration }}s ease-in-out infinite;
+        --pres-glow-animation: {{ glow_anim }} {{ (duration * 0.9) | round(2) }}s ease-in-out infinite;
+        --pres-halo-animation: {{ halo_anim }} {{ (duration * 1.15) | round(2) }}s ease-in-out infinite;
+
+        opacity: 1;
+
+        --icon-color: rgba({{ rgb }}, 1);
+
+        background-color: rgba(77, 77, 77,0.1) !important;
+        box-shadow: none !important;
+        border: 1px solid rgba(255,255,255,0.06);
+
+        position: relative;
+        transform-origin: 50% 60%;
+        animation: var(--shape-animation);
+      }
+
+      .shape::before,
+      .shape::after {
+        content: '';
+        position: absolute;
+        border-radius: inherit;
+        pointer-events: none;
+      }
+
+      .shape::before {
+        inset: -8px;
+        animation: var(--pres-glow-animation);
+      }
+
+      .shape::after {
+        inset: -22px;
+        animation: var(--pres-halo-animation);
+        mix-blend-mode: screen;
+      }
+
+      /* LOW */
+      @keyframes pres-low-breathe {
+        0%   { transform: scale(0.96); }
+        50%  { transform: scale(1.03); }
+        100% { transform: scale(0.96); }
+      }
+      @keyframes pres-low-glow {
+        0%, 100% {
+          box-shadow:
+            0 0 20px 0 rgba(var(--pres-rgb), 0.6),
+            0 0 34px 6 rgba(var(--pres-rgb), 0.55);
+        }
+        50% {
+          box-shadow:
+            0 0 30px 4 rgba(var(--pres-rgb), 0.95),
+            0 0 50px 10px rgba(var(--pres-rgb), 0.85);
+        }
+      }
+      @keyframes pres-low-halo {
+        0%, 100% {
+          box-shadow:
+            0 0 80px 20px rgba(var(--pres-rgb), 0.35),
+            0 -20px 80px -14px rgba(220, 240, 255, 0.55);
+        }
+        50% {
+          box-shadow:
+            0 0 130px 36px rgba(var(--pres-rgb), 0.5),
+            0 -34px 100px -8px rgba(240, 250, 255, 0.8);
+        }
+      }
+
+      /* SOFT */
+      @keyframes pres-soft-wave {
+        0%   { transform: translateX(0); }
+        25%  { transform: translateX(-1px); }
+        50%  { transform: translateX(1px) translateY(-1px); }
+        75%  { transform: translateX(-1px); }
+        100% { transform: translateX(0); }
+      }
+      @keyframes pres-soft-glow {
+        0%, 100% {
+          box-shadow:
+            0 0 22px 0 rgba(var(--pres-rgb), 0.6),
+            0 0 34px 4 rgba(var(--pres-rgb), 0.7);
+        }
+        50% {
+          box-shadow:
+            0 0 28px 2 rgba(var(--pres-rgb), 0.95),
+            0 0 48px 12px rgba(var(--pres-rgb), 0.85);
+        }
+      }
+      @keyframes pres-soft-halo {
+        0%, 100% {
+          box-shadow:
+            0 0 90px 26px rgba(var(--pres-rgb), 0.35),
+            0 18px 80px -12px rgba(0, 220, 255, 0.35);
+        }
+        50% {
+          box-shadow:
+            0 0 140px 42px rgba(var(--pres-rgb), 0.45),
+            0 30px 110px -10px rgba(0, 255, 255, 0.5);
+        }
+      }
+
+      /* NORMAL */
+      @keyframes pres-normal-breathe {
+        0%   { transform: scale(0.98); }
+        50%  { transform: scale(1.05); }
+        100% { transform: scale(0.98); }
+      }
+      @keyframes pres-normal-glow {
+        50% {
+          box-shadow:
+            0 0 26px 4 rgba(var(--pres-rgb), 0.9),
+            0 0 42px 10px rgba(var(--pres-rgb), 0.85);
+        }
+      }
+      @keyframes pres-normal-halo {
+        50% {
+          box-shadow:
+            0 0 120px 40px rgba(var(--pres-rgb), 0.45),
+            0 26px 80px -10px rgba(180,255,200,0.5);
+        }
+      }
+
+      /* HIGH */
+      @keyframes pres-high-pulse {
+        0%   { transform: scale(1); }
+        50%  { transform: scale(1.07); }
+        100% { transform: scale(1); }
+      }
+      @keyframes pres-high-glow {
+        50% {
+          box-shadow:
+            0 0 30px 4 rgba(var(--pres-rgb), 0.95),
+            0 0 54px 14px rgba(var(--pres-rgb), 0.9);
+        }
+      }
+      @keyframes pres-high-halo {
+        50% {
+          box-shadow:
+            0 0 140px 48px rgba(var(--pres-rgb), 0.55),
+            0 26px 100px -10px rgba(255,210,150,0.5);
+        }
+      }
+
+      /* VERY HIGH */
+      @keyframes pres-veryhigh-shimmer {
+        0%   { transform: scale(1); filter: blur(0); }
+        50%  { transform: scale(1.08); filter: blur(0.6px); }
+        100% { transform: scale(1); filter: blur(0); }
+      }
+      @keyframes pres-veryhigh-glow {
+        50% {
+          box-shadow:
+            0 0 34px 6 rgba(var(--pres-rgb), 1),
+            0 0 62px 14px rgba(var(--pres-rgb), 0.95);
+        }
+      }
+      @keyframes pres-veryhigh-halo {
+        50% {
+          box-shadow:
+            0 0 160px 60px rgba(var(--pres-rgb), 0.6),
+            0 34px 120px -12px rgba(255,150,100,0.6);
+        }
+      }
+    .: |
+      mushroom-shape-icon {
+        --icon-size: 64px;
+        --icon-color: rgba(var(--pres-rgb),1) !important;
+        display: flex;
+        margin: -18px 0 10px -20px !important;
+        padding-right: 22px;
+        padding-bottom: 10px;
+      }
+      ha-card {
+        clip-path: inset(0 0 0 0 round var(--ha-card-border-radius, 14px));
+        --card-primary-font-size: 1.5rem !important;
+        --card-primary-line-height: 1.3 !important;
       }
 
 ```
