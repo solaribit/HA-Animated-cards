@@ -25,6 +25,7 @@
 | **🧺 Appliances** | washer, dryer, dishwasher, etc | [**View Page**](./appliances.md) |
 | **🔋 Battery** | Battery level, charging animations | [**View Page**](./battery.md) |
 | **📈 Graph Cards** | Temp, humidity, etc | [**View Page**](./env_with_graph.md) |
+| **📟 Badge/Button** | Make custom Badge/Button  | [**View Page**](./badge_maker.md) |
 
 ---
 
