@@ -33,9 +33,9 @@
 >
 >* Fridge
 
-This [YouTube Video](https://youtu.be/6NM60DEdScA) explains how to do it.
+This [YouTube Video](https://youtu.be/3Njo1-jht5w) explains how to do it.
 
-<img width="1280" height="720" alt="40-high" src="https://github.com/user-attachments/assets/58f7ade2-2752-409c-8b3e-1f9957376ee6" />
+<img width="1280" height="720" alt="40-high" src="https://github.com/user-attachments/assets/266e4098-7268-4c91-9036-ce5a375aad8a" />
 
 
  `Loading image... please wait`
@@ -49,7 +49,7 @@ This [YouTube Video](https://youtu.be/6NM60DEdScA) explains how to do it.
 >
 > ```yaml
 > grid_options:
->   rows: 1.5
+>   rows: 1.6
 > ```
 
 <hr>
